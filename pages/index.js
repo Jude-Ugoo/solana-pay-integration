@@ -12,10 +12,16 @@ import { useCashApp } from "../hooks/cashapp";
 
 const Home = () => {
   const [transactionQRModalOpen, setTransactionQRModalOpen] = useState(false);
-  const [newTransactionModalOpen, setNewTransactionModalOpen] = useState(false);
 
-  const { connected, publicKey, avatar, userAddress, transactions } =
-    useCashApp();
+  const {
+    connected,
+    publicKey,
+    avatar,
+    userAddress,
+    transactions,
+    newTransactionModalOpen,
+    setNewTransactionModalOpen,
+  } = useCashApp();
 
   return (
     <div className="flex min-h-screen ">

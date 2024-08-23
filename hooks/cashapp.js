@@ -21,6 +21,7 @@ export const useCashApp = () => {
   const [amount, setAmount] = useState(0);
   const [receiver, setReceiver] = useState("");
   const [transactionPurpose, setTransactionPurpose] = useState("");
+  const [newTransactionModalOpen, setNewTransactionModalOpen] = useState(false);
 
   const { connected, publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
@@ -33,10 +34,11 @@ export const useCashApp = () => {
     useEffect(() => {
       localStorage.setItem(stroageKey, JSON.stringify(value));
     }, [value, setValue]);
+
     return [value, setValue];
   };
 
-  const [transacions, setTransactions] = useLocalStroage("transactions", []);
+  const [transactions, setTransactions] = useLocalStroage("transactions", []);
 
   // Get Avatar based on the userAddress
   useEffect(() => {
@@ -99,7 +101,32 @@ export const useCashApp = () => {
       console.error("Transaction failed:", error);
     }
 
-    // Create transaction history object
+    //? Create transaction history object
+    const newID = (transacions.length + 1).toString()
+    const newTransaction = {
+      id: newID,
+      from: {
+        name: publicKey,
+        handle: publicKey,
+        avatar: avatar,
+        verified: true,
+      },
+
+      to: {
+        name: receiver,
+        handle: '-',
+        avatar: getAvatarUrl(receiver.toString()),
+        verified: false,
+      },
+      description: transactionPurpose,
+      transactionDate: new Date(), 
+      status: "Completed",
+      amount: amount,
+      source: "-",
+      identifier: '-',
+    }
+    setNewTransactionModalOpen(false)
+    setTransactions([newTransaction, ...transactions])
   };
 
   return {
@@ -114,7 +141,9 @@ export const useCashApp = () => {
     setReceiver,
     transactionPurpose,
     setTransactionPurpose,
-    transacions,
+    transactions,
     setTransactions,
+    newTransactionModalOpen,
+    setNewTransactionModalOpen,
   };
 };
